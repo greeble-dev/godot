@@ -4764,8 +4764,22 @@ Vector3i Animation::_compress_key(uint32_t p_track, const AABB &p_bounds, int32_
 			Vector2 oct = axis.octahedron_encode();
 			Vector3 rot_norm(oct.x, oct.y, angle / (Math_PI * 2.0)); // high resolution rotation in 0-1 angle.
 
+			// Hack in some values for testing.
+			rot_norm[0] = 1.0f;
+			rot_norm[1] = 0.999999f;
+			rot_norm[2] = (1.0f / 65535.0f) - 0.000001f;
+
 			for (int j = 0; j < 3; j++) {
+				// Original code.
 				values[j] = CLAMP(int32_t(rot_norm[j] * 65535.0), 0, 65535);
+
+				WARN_PRINT(vformat("Original: %f quantizes to %f (unorm %d)", rot_norm[j], float(values[j] / 65535.0f), values[j]));
+
+				// Updated code                             Added + 0.5f
+				//                                                  \/
+				values[j] = CLAMP(int32_t((rot_norm[j] * 65535.0) + 0.5f), 0, 65535);
+
+				WARN_PRINT(vformat("Updated: %f quantizes to %f (unorm %d)", rot_norm[j], float(values[j] / 65535.0f), values[j]));
 			}
 		} break;
 		case TYPE_SCALE_3D: {
