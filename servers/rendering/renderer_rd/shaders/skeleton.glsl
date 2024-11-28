@@ -208,6 +208,7 @@ void main() {
 		for (uint i = 0; i < params.blend_shape_count; i++) {
 			float w = blend_shape_weights.data[i];
 			if (abs(w) > 0.0001) {
+				w = 1.0;
 				uint base_offset = params.vertex_count * i * (params.vertex_stride + params.normal_tangent_stride) + index * params.vertex_stride;
 
 				blend_vertex += uintBitsToFloat(uvec3(src_blend_shapes.data[base_offset + 0], src_blend_shapes.data[base_offset + 1], src_blend_shapes.data[base_offset + 2])) * w;
