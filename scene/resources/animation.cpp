@@ -4789,7 +4789,7 @@ Vector3i Animation::_compress_key(uint32_t p_track, const AABB &p_bounds, int32_
 			}
 
 			blend = (blend / float(Compression::BLEND_SHAPE_RANGE)) * 0.5 + 0.5;
-			values[0] = CLAMP(int32_t(blend * 65535.0), 0, 65535);
+			values[0] = CLAMP(int32_t(blend * 65534.0), 0, 65534);
 		} break;
 		default: {
 			ERR_FAIL_V(Vector3i()); // Safety check.
@@ -5546,7 +5546,7 @@ Vector3 Animation::_uncompress_pos_scale(uint32_t p_compressed_track, const Vect
 	return compression.bounds[p_compressed_track].position + pos_norm * compression.bounds[p_compressed_track].size;
 }
 float Animation::_uncompress_blend_shape(const Vector3i &p_value) const {
-	float bsn = float(p_value.x) / 65535.0;
+	float bsn = float(p_value.x) / 65534.0;
 	return (bsn * 2.0 - 1.0) * float(Compression::BLEND_SHAPE_RANGE);
 }
 
